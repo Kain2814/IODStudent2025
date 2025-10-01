@@ -1,0 +1,35 @@
+/* This is my button styling */
+button {
+  background-color: blue;
+  color: black;
+  border: cyan;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: crosshair;
+  border-radius: 8px;
+}
+button:hover {
+  background-color: red;
+  color: white;
+}
+body {
+  font-family: sans-serif;
+  margin: 0;
+}
+.container {
+  display: flex;
+  min-height: 100vh;
+  align-items: stretch;
+}
+.column {
+  background: purple;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}

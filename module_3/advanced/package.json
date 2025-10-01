@@ -1,0 +1,16 @@
+{
+  "name": "advanced.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "advanced.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon advanced.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.1.10",
+    "sentiment": "^5.0.2"
+  }
+}
