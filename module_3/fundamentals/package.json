@@ -1,11 +1,11 @@
 {
-  "name": "fundamentals.js",
+  "name": "fundamentals_exercise.js",
   "version": "1.0.0",
   "description": "",
-  "main": "fundamentals.js",
+  "main": "fundamentals_exercise.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon fundamentals.js"
+    "start": "nodemon fundamentals_exercise.js"
   },
   "author": "",
   "license": "ISC",
