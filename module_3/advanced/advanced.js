@@ -503,80 +503,357 @@
 // The Throw operator can be used in the try or catch block to intentionally
 // --- cause a new or existing error to crash the application for a specific reason:
 
-function checkJson(json) { // checks json argument for validity and ensures a name property
-try {
-const user = JSON.parse(json); // parse string into object
-if (!user.name) {
-throw new SyntaxError("Incomplete data: no name"); // we can throw our own custom errors
-}
-return true; // returns true (valid json) if no error was thrown above
-} catch (err) {
-if (err instanceof SyntaxError) { // once caught, we can do specific things based on error type
-console.log( "JSON Error: " + err.message );
-} else {
-throw err; // rethrow other non-syntax errors; invalid json will still cause a crash
-}
-}
-return false; // returns false if any error occurred
-}
+// function checkJson(json) { // checks json argument for validity and ensures a name property
+// try {
+// const user = JSON.parse(json); // parse string into object
+// if (!user.name) {
+// throw new SyntaxError("Incomplete data: no name"); // we can throw our own custom errors
+// }
+// return true; // returns true (valid json) if no error was thrown above
+// } catch (err) {
+// if (err instanceof SyntaxError) { // once caught, we can do specific things based on error type
+// console.log( "JSON Error: " + err.message );
+// } else {
+// throw err; // rethrow other non-syntax errors; invalid json will still cause a crash
+// }
+// }
+// return false; // returns false if any error occurred
+// }
 
 
-checkJson(hello)
+// checkJson(hello)
 
+// ------------------------- Promises: Chaining (slide 55)----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// If we have a sequence of asynchronus taks to be performed one after another (as in the previous fetch example)
+// ---- we can chain the .then() calls one after the other. Any value returned from .then() is itself a promise:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// let start = 10;
+// new Promise((resolve, reject) => {
+// resolve(start); // resolve promise successfully with value of 10
+// }).then((result) => { // when resolve is called, it triggers .then()
+// console.log(result); return result + start; // values returned from .then() are also promises
+// }).then((result) => { // so we can chain them together
+// console.log(result); return result + start; // increasing result by 10 each time
+// }).then((result) => { // we can continue to chain them together
+// console.log(result); return result + start; // increasing result by 10 each time
+// });
+// // prints 10, 20, 30
 
 
 
 
 
+// ------------------------ Promises: returning promises (slide 56)--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
+// let start = 1000;
+// new Promise( resolve => setTimeout(() => resolve(start), start * 10)
+// ).then(result => { // promise handler function inside .then()
+// console.log(result); let next = result + start;
+// return new Promise( resolve => setTimeout(() => resolve(next), next * 10) );
+// }).then(result => { // can explicitly return new promises
+// console.log(result); let next = result + start;
+// return new Promise( resolve => setTimeout(() => resolve(next), next * 10) );
+// }).then(result => { // which use the results of previously resolved promises in the chain
+// console.log(result); let next = result + start;
+// return new Promise( resolve => setTimeout(() => resolve(next), next * 10) );
+// });
+// prints 10, 20, 30, but with 100, 200 and 300ms delays in between
 
 
+// ------------------------ Promises: returning promises (slide 57)------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+// Promise.all(promises): accepts an iterable of promises, waits for all promises to resolve and returns an array of their
+// results. If any of the given promises rejects, it becomes the error of Promise.all, and all other results are ignored.
+// Promise.allSettled(promises): accepts an iterable of promises, waits for all promises to settle (either success or failure) and
+// returns their results as an array of objects with:
+
+// Promise.race(promises): accepts an iterable of promises, waits for the first promise to settle, and its result/error becomes
+// the outcome.
+// Promise.any(promises): waits for the first promise to fulfil, and its result becomes the outcome. If all of the given promises
+// are rejected, AggregateError becomes the error of Promise.any.
+// Promise.resolve(value): makes a resolved promise with the given value.
+// Promise.reject(error): makes a rejected promise with the given error.
+
+// ------------------------------------ Promises: aync/await (slide 58)-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// async and await are two important keywords that go hand in hand, and can be used to force promises to behave
+// ----- synchronously - ie to wait until the promise resolve before executing the rest of the code body.
+// They replce the .then() and .catch() syntax of asynchronously processed promises.
 
 
+// const promise = new Promise((resolve) => {
+// setTimeout( () => resolve('Simple successful promise'), 250 )
+// });
+
+// using .then to process asynchronously:
+// promise.then(msg => console.log(msg));
+
+// using await to process synchronously (if using await in a function it needs to be async):
+// let msg = await promise;
+// console.log(msg);
 
 
+// ------------------------------------------ async function (slide 59)-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// The word async before a function means a function always returns a promise.
+// ----- It is required when the funciton body includes an await statement.
+// The async and await keywords enable asynchronous, promise-based behavior to be written mroe concisely using synchronous style code.
 
 
+// async function asyncFunctionDeclaration() { ... } // function declaration syntax
+
+// const asyncFunctionExpression = async function() { ... } // function expression syntax
+
+// const asyncFunctionArrow = async () => { ... } // arrow function syntax
+
+// ----------------------------------------------- await keyword (Slide 60)----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Must be used inside an async function. It makes JavaScript wait until that promise settles and returns its result. Any errors
+// --- can be caught with a try...catch.
+
+// async function waitForPromise() { // async function allows synchronous promise handling internally
+// // since we have synchronous code and no .catch(), we use try ... catch for errors
+// try {
+// let promiseResult = await promise; // waits here as long as promise needs to resolve
+// console.log(`Success: ${promiseResult}`) // then continues executing other code
+// return true;
+// } catch(error) {
+// console.error(`Failure: ${error.message}`)
+// }
+// //only gets here if return true above did NOT happen, ie. there was an error
+// return false;
+// }
+
+// -------------------------------------- Promises: Summary (Slide 61) --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Promises are a way to handle asynchronous operations in JavaScript, allowing you to work with code that will complete in the
+// ---- future. Promises can be in one of three states: pending, fulfilled, or rejected.
+// Key features of promises:
+// Creation: A promise is created using the Promise constructor, which takes a function with resolve and reject parameters,
+// ----- which themselves are functions.
+// Then and Catch: .then() handles the result when a promise is fulfilled (resolved), and .catch() handles errors when a
+// ----- promise is rejected.
+// Async/Await: Keywords to handle promises in a cleaner, more intuitive way that resembles synchronous code
+// Error Handling: Errors are propagated down the chain, making it easy to manage failures.
+// Parallel Execution: Multiple promises can run in parallel using Promise.all() or Promise.race().
+
+// ================================================= End of Module 3 Advanced =============================================================================================================================================================================================================================================================
+
+// ---------------------------------------------------------- Class activity -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// // Task 1 
+
+// // Function Declaration
+// function startPreparing() {
+//     console.log("Started preparing the pizza...")
+// }
+
+// // Function Expression
+// const makeBase = function() {
+//     console.log("Made the base")
+// }
+
+// //arrow functions being used
+// const addSauceAndCheese = () => console.log("Added the sauce and cheese")
+// const addToppings = () => console.log("Added the pizza toppings")
+// const cookPizza = () => console.log("Cooked the pizza")
+// const pizzaReady = () => console.log("pizza is ready!")
+
+// startPreparing()
+// makeBase()
+// addSauceAndCheese()
+// addToppings()
+// cookPizza()
+// pizzaReady()
+
+// Task 2
+
+// function startPreparing() {
+//     setTimeout(() => {
+//      console.log("Started preparing the pizza...")
+//      makeBase()
+//     }, 1000)
+// }
+
+// const makeBase = function() {
+//     setTimeout(() => {
+//      console.log("Made the base")
+//      addSauceAndCheese()
+//     }, 800)
+// } 
+
+// const addSauceAndCheese = () => {
+//     setTimeout(() => {
+//     console.log("Added the sauce and cheese")
+//     addToppings()
+//     }, 700)
+// } 
+
+// const addToppings = () => {
+//     setTimeout(() => {
+//     console.log("Toppings have been added")
+//     cookPizza()
+//     }, 600)
+// } 
+
+// const cookPizza = () => {
+//     setTimeout(() => {
+//     console.log("Cooked the pizza")
+//     pizzaReady()
+//     }, 1200)
+// } 
+
+// const pizzaReady = () => {
+//         setTimeout(() => {
+//     console.log("Pizza is ready!")
+//     },1300)
+// } 
 
 
+// startPreparing()
 
 
+// Task 3
 
+// function startPreparing () {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Started preparing pizza...")
+//             resolve()
+//         },1000)
+//     })
+// }
 
+// const makeBase = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Made the base")
+//             resolve()
+//         },900)
+//     })
+// }
 
+// const addSauceAndCheese = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Added the sauce and cheese")
+//             resolve()
+//         },800)
+//     })
+// }
 
+// const addToppings = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Pizza toppings have been added")
+//             resolve()
+//         },700)
+//     })
+// }
 
+// const cookPizza = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Cooked the pizza")
+//             resolve()
+//         },600)
+//     })
+// }
 
+// const pizzaReady = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Pizza is ready!")
+//             resolve()
+//         },500)
+//     })
+// }
 
+// startPreparing()
+// .then(makeBase)
+// .then(addSauceAndCheese)
+// .then(addToppings)
+// .then(cookPizza)
+// .then(pizzaReady)
+// .then(() => console.log("All steps completed successfully"))
 
+// Task 4
 
+// function startPreparing () {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Started preparing pizza...")
+//             resolve()
+//         },1000)
+//     })
+// }
 
+// const makeBase = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Made the base")
+//             resolve()
+//         },900)
+//     })
+// }
 
+// const addSauceAndCheese = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Added the sauce and cheese")
+//             resolve()
+//         },800)
+//     })
+// }
 
+// const addToppings = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Pizza toppings have been added")
+//             resolve()
+//         },700)
+//     })
+// }
 
+// const cookPizza = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Cooked the pizza")
+//             resolve()
+//         },600)
+//     })
+// }
+
+// const pizzaReady = () => {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             console.log("Pizza is ready!")
+//             resolve()
+//         },500)
+//     })
+// }
+
+// async function makePizza() {
+//     try {
+//         await startPreparing()
+//         await makeBase()
+//         await addSauceAndCheese()
+//         await addToppings()
+//         await cookPizza()
+//         await pizzaReady()
+//         console.log("All steps complete")       
+//     } catch (e) {
+//         console.error("something went wrong")
+//     }
+// }
+
+// makePizza()
+
+// ============================================= DONE ==================================================================================================================
 
 
 
